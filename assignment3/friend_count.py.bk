@@ -1,0 +1,23 @@
+import MapReduce
+import sys
+
+mr = MapReduce.MapReduce()
+
+def mapper(record):
+    person = record[0]
+    friend = record[1]
+    list = [person, friend]
+    key = list.sort()
+    mr.emit_intermediate(key, 1)
+
+def reducer(key, list_of_values):
+    list = []
+    count = len(list)
+    if count == 2:
+        mr.emit((key[0], key[1]))
+        mr.emit((key[1], key[0]))
+
+if __name__== '__main__':
+    inputdata = open(sys.argv[1])
+    mr.execute(inputdata, mapper, reducer)
+
